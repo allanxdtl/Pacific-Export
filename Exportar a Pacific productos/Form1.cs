@@ -211,6 +211,7 @@ namespace Exportar_a_Pacific_productos
 			}
 			catch(NullReferenceException ex)
 			{
+				//Aqui es donde salta el supuesto error
 				MessageBox.Show(ex.Message);
 			}
 			finally
