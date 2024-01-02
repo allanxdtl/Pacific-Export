@@ -246,6 +246,7 @@ namespace Exportar_a_Pacific_productos
 			MySqlConnection con = new MySqlConnection(); /*= new MySqlConnection(ConfigurationManager.ConnectionStrings["remote"].ToString());*/
 			agrupaciones = new DataTable();
 
+
 			try
 			{
 				con.ConnectionString = config.AppSettings.Settings["remote"].Value;
