@@ -218,7 +218,7 @@ namespace Exportar_a_Pacific_productos
 					MessageBox.Show("Agregando nuevo perfil para la conexion al servidor de la base de datos");
 
 					config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-					config.AppSettings.Settings.Add("remote", "Database=la_bajadita; server=pc-pruebas; Port=3306; User Id=remote; password=nomanches;");
+					config.AppSettings.Settings.Add("remote", $"Database=sys; server={Environment.MachineName}; Port=3306; User Id=remote; password=nomanches;");
 					config.Save(ConfigurationSaveMode.Modified);
 					config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 					Task.Run(() => CargarGrupos());
