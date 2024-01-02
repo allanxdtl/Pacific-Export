@@ -209,10 +209,11 @@ namespace Exportar_a_Pacific_productos
 			{
 				MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
-			catch(NullReferenceException ex)
+			catch(NullReferenceException)
 			{
 				//Aqui es donde salta el supuesto error
-				MessageBox.Show(ex.Message);
+				MessageBox.Show("Agregando nuevo perfil para la conexion al servidor de la base de datos");
+				throw new Exception();
 			}
 			finally
 			{
@@ -223,7 +224,18 @@ namespace Exportar_a_Pacific_productos
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			CargarGrupos();
+			try
+			{
+				CargarGrupos();
+			}
+			catch (Exception)
+			{
+				config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+				config.AppSettings.Settings.Add("remote", "Database=la_bajadita; server=pc-pruebas; Port=3306; User Id=remote; password=nomanches;");
+				config.Save(ConfigurationSaveMode.Modified);
+				config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+				CargarGrupos();
+			}
 		}
 
 		//Aqui cuando se seleccione un grupo del combo se cargaran todos los subgrupos correspondientes al seleccionado
