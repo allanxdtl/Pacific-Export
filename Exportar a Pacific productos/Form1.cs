@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using SpreadsheetLight;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Exportar_a_Pacific_productos
 {
@@ -183,59 +184,57 @@ namespace Exportar_a_Pacific_productos
 		DataTable agrupaciones;
 
 		//Aqui hacemos una consulta al servidor con todos los grupos existentes en la base de datos
-		public async void CargarGrupos()
+		public void CargarGrupos()
 		{
-			cmbGrupos.Items.Clear();
-			lblLoadGrupos.Text = "Cargando grupos";
-			cmbAgrupaciones.Enabled = false;
-			grupos = new DataTable();
-			MySqlConnection con = new MySqlConnection(); //= new MySqlConnection(ConfigurationManager.ConnectionStrings["remote"].ToString()); ;
-			try
+			Invoke(new Action(async () =>
 			{
-				con.ConnectionString=config.AppSettings.Settings["remote"].Value;
-				await con.OpenAsync();
-				MySqlDataAdapter ad = new MySqlDataAdapter(new MySqlCommand("select * from tblagrupacionart", con));
-				await ad.FillAsync(grupos);
-
-				for (int i = 0; i < grupos.Rows.Count; i++)
+				cmbGrupos.Items.Clear();
+				lblLoadGrupos.Text = "Cargando grupos";
+				cmbAgrupaciones.Enabled = false;
+				grupos = new DataTable();
+				MySqlConnection con = new MySqlConnection(); //= new MySqlConnection(ConfigurationManager.ConnectionStrings["remote"].ToString()); ;
+				try
 				{
-					cmbGrupos.Items.Add(grupos.Rows[i][1]);
+					con.ConnectionString = config.AppSettings.Settings["remote"].Value;
+					await con.OpenAsync();
+					MySqlDataAdapter ad = new MySqlDataAdapter(new MySqlCommand("select * from tblagrupacionart", con));
+					await ad.FillAsync(grupos);
+
+					for (int i = 0; i < grupos.Rows.Count; i++)
+					{
+						cmbGrupos.Items.Add(grupos.Rows[i][1]);
+					}
+
+
+					cmbAgrupaciones.Enabled = true;
 				}
+				catch (MySqlException ex)
+				{
+					MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				catch (NullReferenceException)
+				{
+					//Aqui es donde salta el supuesto error
+					MessageBox.Show("Agregando nuevo perfil para la conexion al servidor de la base de datos");
 
+					config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+					config.AppSettings.Settings.Add("remote", "Database=la_bajadita; server=pc-pruebas; Port=3306; User Id=remote; password=nomanches;");
+					config.Save(ConfigurationSaveMode.Modified);
+					config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+					Task.Run(() => CargarGrupos());
+				}
+				finally
+				{
+					await con.CloseAsync();
+					lblLoadGrupos.Visible = false;
+				}
+			}));
 
-				cmbAgrupaciones.Enabled = true;
-			}
-			catch (MySqlException ex)
-			{
-				MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-			catch(NullReferenceException)
-			{
-				//Aqui es donde salta el supuesto error
-				MessageBox.Show("Agregando nuevo perfil para la conexion al servidor de la base de datos");
-				throw new Exception();
-			}
-			finally
-			{
-				await con.CloseAsync();
-				lblLoadGrupos.Visible = false;
-			}
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			try
-			{
-				CargarGrupos();
-			}
-			catch (Exception)
-			{
-				config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-				config.AppSettings.Settings.Add("remote", "Database=la_bajadita; server=pc-pruebas; Port=3306; User Id=remote; password=nomanches;");
-				config.Save(ConfigurationSaveMode.Modified);
-				config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-				CargarGrupos();
-			}
+			CargarGrupos();
 		}
 
 		//Aqui cuando se seleccione un grupo del combo se cargaran todos los subgrupos correspondientes al seleccionado
@@ -249,7 +248,7 @@ namespace Exportar_a_Pacific_productos
 
 			try
 			{
-				con.ConnectionString=config.AppSettings.Settings["remote"].Value;
+				con.ConnectionString = config.AppSettings.Settings["remote"].Value;
 				await con.OpenAsync();
 				MySqlDataAdapter ad = new MySqlDataAdapter(new MySqlCommand("select cod_agr, des_agr, cod_gpo from tblcatagrupacionart " +
 					$"where cod_gpo={grupos.Rows[cmbGrupos.SelectedIndex][0]}", con));
