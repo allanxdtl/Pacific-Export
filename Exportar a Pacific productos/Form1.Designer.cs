@@ -148,7 +148,7 @@
 			// gif
 			// 
 			this.gif.Image = ((System.Drawing.Image)(resources.GetObject("gif.Image")));
-			this.gif.Location = new System.Drawing.Point(0, 0);
+			this.gif.Location = new System.Drawing.Point(0, 49);
 			this.gif.Name = "gif";
 			this.gif.Size = new System.Drawing.Size(1254, 681);
 			this.gif.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;

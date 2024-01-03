@@ -138,6 +138,7 @@
 			// BtnSet
 			// 
 			this.BtnSet.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.BtnSet.Enabled = false;
 			this.BtnSet.Font = new System.Drawing.Font("MS Reference Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.BtnSet.Location = new System.Drawing.Point(12, 337);
 			this.BtnSet.Name = "BtnSet";

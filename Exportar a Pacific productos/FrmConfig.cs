@@ -32,7 +32,15 @@ namespace Exportar_a_Pacific_productos
 		private async void BtnSet_Click(object sender, EventArgs e)
 		{
 			Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			string cadena = $"Database={comboBox1.Text}; server={txtServer.Text}; Port={txtPort.Text}; User Id={txtUser.Text}; password={txtPassword.Text};";
+			MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+			{
+				Database = comboBox1.Text,
+				Server = txtServer.Text,
+				Port = Convert.ToUInt32(txtPort.Text),
+				UserID = txtUser.Text,
+				Password = txtPassword.Text
+			};
+			string cadena = builder.ConnectionString;
 			config.AppSettings.Settings["remote"].Value = cadena;
 			config.Save(ConfigurationSaveMode.Modified);
 
@@ -43,7 +51,7 @@ namespace Exportar_a_Pacific_productos
 				await con.OpenAsync();
 				MessageBox.Show("Se ha probado la conexion exitosamente", "Conexion exitosa",
 					MessageBoxButtons.OK, MessageBoxIcon.Information);
-				MessageBox.Show("Se han establecido todos los parametros para la conexion", "Configuracion guardada", 
+				MessageBox.Show("Se han establecido todos los parametros para la conexion", "Configuracion guardada",
 					MessageBoxButtons.OK, MessageBoxIcon.Information);
 				Close();
 			}
@@ -70,7 +78,15 @@ namespace Exportar_a_Pacific_productos
 		private async void txtPassword_TextChanged(object sender, EventArgs e)
 		{
 			comboBox1.Items.Clear();
-			string cadena = $"Database=sys; server={txtServer.Text}; Port={txtPort.Text}; User Id={txtUser.Text}; password={txtPassword.Text};";
+			MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+			{
+				Database = "sys",
+				Server = txtServer.Text,
+				Port = Convert.ToUInt32(txtPort.Text),
+				UserID = txtUser.Text,
+				Password = txtPassword.Text
+			};
+			string cadena = builder.ConnectionString;
 			MySqlConnection con = new MySqlConnection();
 			try
 			{
@@ -84,9 +100,12 @@ namespace Exportar_a_Pacific_productos
 				{
 					comboBox1.Items.Add(reader.GetString(0));
 				}
+
+				BtnSet.Enabled = true;
 			}
 			catch (MySqlException)
 			{
+				BtnSet.Enabled = false;
 				//La contraseña es incorrecta
 			}
 			finally
