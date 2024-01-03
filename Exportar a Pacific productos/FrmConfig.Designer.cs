@@ -38,8 +38,8 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.BtnSet = new System.Windows.Forms.Button();
-			this.txtBd = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
+			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -110,6 +110,7 @@
 			this.txtPassword.Name = "txtPassword";
 			this.txtPassword.Size = new System.Drawing.Size(262, 29);
 			this.txtPassword.TabIndex = 7;
+			this.txtPassword.TextChanged += new System.EventHandler(this.txtPassword_TextChanged);
 			// 
 			// label4
 			// 
@@ -146,15 +147,6 @@
 			this.BtnSet.UseVisualStyleBackColor = true;
 			this.BtnSet.Click += new System.EventHandler(this.BtnSet_Click);
 			// 
-			// txtBd
-			// 
-			this.txtBd.Anchor = System.Windows.Forms.AnchorStyles.None;
-			this.txtBd.Font = new System.Drawing.Font("MS Reference Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtBd.Location = new System.Drawing.Point(168, 284);
-			this.txtBd.Name = "txtBd";
-			this.txtBd.Size = new System.Drawing.Size(262, 29);
-			this.txtBd.TabIndex = 11;
-			// 
 			// label6
 			// 
 			this.label6.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -166,12 +158,21 @@
 			this.label6.TabIndex = 10;
 			this.label6.Text = "Base de datos";
 			// 
+			// comboBox1
+			// 
+			this.comboBox1.Font = new System.Drawing.Font("MS Reference Sans Serif", 10.8F);
+			this.comboBox1.FormattingEnabled = true;
+			this.comboBox1.Location = new System.Drawing.Point(183, 286);
+			this.comboBox1.Name = "comboBox1";
+			this.comboBox1.Size = new System.Drawing.Size(229, 31);
+			this.comboBox1.TabIndex = 12;
+			// 
 			// FrmConfig
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(623, 399);
-			this.Controls.Add(this.txtBd);
+			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.BtnSet);
 			this.Controls.Add(this.label5);
@@ -184,7 +185,7 @@
 			this.Controls.Add(this.txtServer);
 			this.Controls.Add(this.label1);
 			this.Name = "FrmConfig";
-			this.Text = "FrmConfig";
+			this.Text = "Parametros de configuracion";
 			this.Load += new System.EventHandler(this.FrmConfig_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -203,7 +204,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Button BtnSet;
-		private System.Windows.Forms.TextBox txtBd;
 		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.ComboBox comboBox1;
 	}
 }

@@ -32,7 +32,7 @@ namespace Exportar_a_Pacific_productos
 		private async void BtnSet_Click(object sender, EventArgs e)
 		{
 			Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			string cadena = $"Database={txtBd.Text}; server={txtServer.Text}; Port={txtPort.Text}; User Id={txtUser.Text}; password={txtPassword.Text};";
+			string cadena = $"Database={comboBox1.Text}; server={txtServer.Text}; Port={txtPort.Text}; User Id={txtUser.Text}; password={txtPassword.Text};";
 			config.AppSettings.Settings["remote"].Value = cadena;
 			config.Save(ConfigurationSaveMode.Modified);
 
@@ -60,11 +60,39 @@ namespace Exportar_a_Pacific_productos
 		private void FrmConfig_Load(object sender, EventArgs e)
 		{
 			Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			txtBd.Text = config.AppSettings.Settings["remote"].Value.Split(';')[0].Split('=')[1];
+			comboBox1.Text = config.AppSettings.Settings["remote"].Value.Split(';')[0].Split('=')[1];
 			txtServer.Text = config.AppSettings.Settings["remote"].Value.Split(';')[1].Split('=')[1];
 			txtPort.Text = config.AppSettings.Settings["remote"].Value.Split(';')[2].Split('=')[1];
 			txtUser.Text = config.AppSettings.Settings["remote"].Value.Split(';')[3].Split('=')[1];
 			txtPassword.Text = config.AppSettings.Settings["remote"].Value.Split(';')[4].Split('=')[1];
+		}
+
+		private async void txtPassword_TextChanged(object sender, EventArgs e)
+		{
+			comboBox1.Items.Clear();
+			string cadena = $"Database=sys; server={txtServer.Text}; Port={txtPort.Text}; User Id={txtUser.Text}; password={txtPassword.Text};";
+			MySqlConnection con = new MySqlConnection();
+			try
+			{
+				con.ConnectionString = cadena;
+				await con.OpenAsync();
+				MySqlCommand cmd = new MySqlCommand("show databases", con);
+
+				var reader = await cmd.ExecuteReaderAsync();
+
+				while (reader.Read())
+				{
+					comboBox1.Items.Add(reader.GetString(0));
+				}
+			}
+			catch (MySqlException)
+			{
+				//La contraseña es incorrecta
+			}
+			finally
+			{
+				await con.CloseAsync();
+			}
 		}
 	}
 }
